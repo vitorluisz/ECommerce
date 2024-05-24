@@ -1,0 +1,130 @@
+﻿@model IEnumerable<Product>
+
+<style>
+    /* Remover sublinhado e cor azul do link */
+    .product-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Adicionar bordas arredondadas e espaçamento */
+    .product-table {
+        width: 250px; /* Tamanho fixo */
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        margin-right: 20px; /* Espaçamento para os lados */
+        margin-bottom: 20px; /* Espaçamento entre as tabelas */
+        padding: 10px; /* Adicionar padding para espaçamento interno */
+        text-align: center;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        cursor: pointer;
+    }
+
+    #preview-table {
+        display: none;
+        position: absolute;
+        top: 100px;
+        right: 100px;
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 0;
+    }
+
+        /* Estilos para a tabela secundária - linhas */
+        #preview-table tr {
+            border-bottom: 1px solid #ccc;
+        }
+
+        /* Estilos para a tabela secundária - células */
+        #preview-table td {
+            padding: 5px;
+        }
+</style>
+
+<h1>Produtos</h1>
+
+<table>
+    <tbody>
+        @if (Model != null)
+        {
+            @for (int i = 0; i < Model.Count(); i += 3)
+            {
+                <tr>
+                    @for (int j = i; j < Math.Min(i + 3, Model.Count()); j++)
+                    {
+                        var product = Model.ElementAt(j);
+                        <td>
+                            <form asp-controller="Basket" asp-action="AddBasket" method="post">
+                                <input type="hidden" name="productId" value="@product.Id" />
+                                <table class="product-table" onclick="submitForm(this)">
+                                    <tr>
+                                        <td value="@product.Name">@product.Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td value="@product.ImageUrl"><img src="@Url.Content(product.ImageUrl)" width="100" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td value="@product.Description">@product.Description</td>
+                                    </tr>
+                                    <tr>
+                                        <td value="@product.Price">R$ @product.Price</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input name="quantity" value="1" max="99" class="form-control" onchange="updateProductQuantity()" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<script>
+    function submitForm(table) {
+        table.parentNode.submit();
+    }
+</script>
+<script>
+    function updateProductQuantity() {
+        const productQuantityInput = document.getElementById("product-quantity");
+        const quantityInput = document.getElementsByName("quantity")[0];
+        productQuantityInput.value = quantityInput.value;
+        const quantityHiddenInput = document.getElementsByName("hidden-quantity")[0];
+        quantityHiddenInput.value = quantityInput.value;
+    }
+</script>
+
+@* <table id="preview-table" style="display: none;">
+    <tbody>
+        <tr>
+            <td>Nome:</td>
+            <td id="preview-name"></td>
+        </tr>
+        <tr>
+            <td>Descrição:</td>
+            <td id="preview-description"></td>
+        </tr>
+        <tr>
+            <td>Preço:</td>
+            <td id="preview-price"></td>
+        </tr>
+        <tr>
+            <form asp-controller="Product" asp-action="AddCarrinho" method="post">
+                <div class="form-group">
+                    <input type="hidden" id="preview-id" name="preview-id" value="preview-id" />
+                    <input type="submit" value="Adicionar ao carrinho" class="btn btn-primary" />
+                </div>
+            </form>
+        </tr>
+    </tbody>
+</table>  *@

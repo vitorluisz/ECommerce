@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Product>
+
+<h1>Carrinho de Compras</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>R$ @item.Price.ToString("N2")</td>
+                </tr>
+                <tr>
+                    <td>
+                        <form asp-controller="Basket" asp-action="DelProductBasket" method="post">
+                            <input type="hidden" name="productId" value="@item.Id" />
+                            <button type="submit">Excluir produto</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2"></td>
+            <td>Total:</td>
+        </tr>
+    </tfoot>
+</table>
+
+<p>
+    <a asp-controller="Basket" asp-action="DelBasket">Excluir tudo</a>
+    <a asp-controller="Product" asp-action="Menu">Continuar Comprando</a>
+    <a asp-controller="Basket" asp-action="Create">Finalizar Compra</a>
+</p>
