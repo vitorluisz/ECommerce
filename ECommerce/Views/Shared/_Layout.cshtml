@@ -22,16 +22,19 @@
                         <li class="nav-item">
                             <a class="navbar-brand" asp-area="" asp-controller="Product" asp-action="Menu">ECommerce</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="AddProduct">Adicionar Produto</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ManagerProduct" asp-action="AddProduct">Adicionar Produto</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Basket" asp-action="Basket">Carrinho</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Cadastar">Cadastrar</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Register">Cadastrar</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Login">Login</a>

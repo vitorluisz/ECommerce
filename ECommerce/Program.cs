@@ -1,7 +1,10 @@
 using ECommerce.Controllers;
 using ECommerce.Data;
 using ECommerce.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace ECommerce
 {
@@ -20,6 +23,13 @@ namespace ECommerce
             }
             );
 
+            builder.Services
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie((options) =>
+                {
+                    options.LoginPath = new PathString("/Login");
+                });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -35,6 +45,7 @@ namespace ECommerce
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
