@@ -24,7 +24,7 @@
                         </li>
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
+                        <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="ManagerProduct" asp-action="AddProduct">Adicionar Produto</a>
                             </li>
                         }
@@ -32,14 +32,28 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Basket" asp-action="Basket">Carrinho</a>
                         </li>
                     </ul>
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Register">Cadastrar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Login">Login</a>
-                        </li>
-                    </ul>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Register">Cadastrar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Login">Login</a>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark">Olá @User.Identity.Name</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Sair</a>
+                            </li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>

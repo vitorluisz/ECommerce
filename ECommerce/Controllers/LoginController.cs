@@ -3,23 +3,35 @@ using ECommerce.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using System.Security.Claims;
 
 namespace ECommerce.Controllers
 {
     public class LoginController : Controller
     {
+        readonly private CustomerModel cm;
         readonly private ApplicationDbContext _db;
 
-        public LoginController(ApplicationDbContext db)
+        public LoginController(ApplicationDbContext db, IConfiguration configuration)
         {
             _db = db;
+            cm = new CustomerModel(db, configuration);
         }
 
         [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
+        }
+        public IActionResult Register()
+        {
+            return View();
+        }
+        public async Task<IActionResult> LogoutAsync()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Menu", "Product");
         }
 
         [HttpPost]
@@ -28,14 +40,12 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var customer = _db.Customer
-                    .Where(c => c.Email == model.Email && c.Password == model.Password)
-                    .FirstOrDefault();
+                var customer = cm.DatabaseCustomer(model);
 
                 if (customer != null)
                 {
                     await SignInAsync(customer);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Menu", "Product");
                 }
                 else
                 {
@@ -43,7 +53,7 @@ namespace ECommerce.Controllers
                 }
             }
 
-            return View(model);
+            return RedirectToAction("Menu", "Product");
         }
 
         private async Task<IActionResult> SignInAsync(Customer customer)
@@ -64,33 +74,20 @@ namespace ECommerce.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Menu", "Product");
             }
         }
 
-        
-
-        //public IActionResult Login()
-        //{
-        //    return View();
-        //}
-
-        public IActionResult Register()
-        {
-            return View();
-        }
-
         [HttpPost]
-        public IActionResult RequestLogin(Customer customer)
+        public async Task<IActionResult> RequestRegister(Customer customer)
         {
-
-            return RedirectToAction("Menu");
-        }
-
-        [HttpPost]
-        public IActionResult RequestRegister(Customer customer)
-        {
-            return RedirectToAction("Menu");
+            if (ModelState.IsValid)
+            {
+                _db.Add(customer);
+                _db.SaveChanges();
+                await Login(customer);
+            }
+            return RedirectToAction("Menu", "Product");
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ECommerce.Controllers
             _db = db;
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddProduct()
         {
             return View("~/Views/Product/AddProduct.cshtml");
@@ -30,7 +30,7 @@ namespace ECommerce.Controllers
                 product.Quantity = 1;
                 _db.Add(product);
                 _db.SaveChanges();
-                return RedirectToAction("Menu");
+                return RedirectToAction("Menu", "Product");
             }
 
             return View(product);
