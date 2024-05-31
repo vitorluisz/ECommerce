@@ -27,9 +27,23 @@ namespace ECommerce.Controllers
             product.Quantity = 1;
             if (ModelState.IsValid)
             {
-                product.Quantity = 1;
                 _db.Add(product);
                 _db.SaveChanges();
+                TempData["MensagemSucesso"] = "Produto adicionado com sucesso!";
+                return RedirectToAction("Menu", "Product");
+            }
+
+            return View(product);
+        }
+
+        [HttpPost]
+        public IActionResult ManagerDelProduct(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Remove(product);
+                _db.SaveChanges();
+                TempData["MensagemSucesso"] = "Produto deletado com sucesso!";
                 return RedirectToAction("Menu", "Product");
             }
 

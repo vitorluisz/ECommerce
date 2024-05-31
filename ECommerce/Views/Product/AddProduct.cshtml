@@ -20,7 +20,12 @@
     </div>
     <div class="form-group">
         <label asp-for="Category" class="control-label">Categoria:</label>
-        <input asp-for="Category" class="form-control" />
+        @Html.DropDownListFor(m => m.Category,
+        Enum.GetValues(typeof(Category))
+        .Cast<Category>()
+        .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+        "Selecione uma categoria",
+        new { @class = "form-control" })
         <span asp-validation-for="Category" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -30,5 +35,18 @@
     </div>
     <div class="form-group">
         <input type="submit" value="Adicionar" class="btn btn-primary" />
+    </div>
+</form>
+
+<h1>Deletar Produto</h1>
+
+<form asp-controller="ManagerProduct" asp-action="ManagerDelProduct" method="post">
+    <div class="form-group">
+        <label asp-for="Id" class="control-label">Id do produto:</label>
+        <input asp-for="Id" class="form-control" />
+        <span asp-validation-for="Id" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Deletar produto" class="btn btn-primary" />
     </div>
 </form>

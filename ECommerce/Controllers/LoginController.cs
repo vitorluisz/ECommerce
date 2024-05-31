@@ -30,6 +30,8 @@ namespace ECommerce.Controllers
         }
         public async Task<IActionResult> LogoutAsync()
         {
+            BasketController bc = new BasketController(_db);
+            bc.DelBasket();
             await HttpContext.SignOutAsync();
             return RedirectToAction("Menu", "Product");
         }
@@ -40,16 +42,20 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var customer = cm.DatabaseCustomer(model);
+                string query = "SELECT TOP 1 * FROM Customer WHERE Email = @email AND Password = @password";
+                var customer = cm.DatabaseCustomer(model, query);
 
                 if (customer != null)
                 {
+                    BasketController bc = new BasketController(_db);
+                    bc.DelBasket();
                     await SignInAsync(customer);
                     return RedirectToAction("Menu", "Product");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Invalid email or password");
+                    TempData["MensagemErro"] = "Login ou senha incorretos.";
+                    return View();
                 }
             }
 
@@ -59,8 +65,9 @@ namespace ECommerce.Controllers
         private async Task<IActionResult> SignInAsync(Customer customer)
         {
             var claims = new[] {
-                new Claim(ClaimTypes.Name, customer.Email),
-                new Claim(ClaimTypes.Role, customer.IsAdmin ? "Admin" : "Usuario")
+                new Claim(ClaimTypes.Name, customer.FirstName),
+                new Claim(ClaimTypes.Role, customer.IsAdmin ? "Admin" : "Usuario"),
+                new Claim(ClaimTypes.Email, customer.Email)
             };
 
             var identity = new ClaimsIdentity(claims, "Password");
@@ -83,9 +90,19 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Add(customer);
-                _db.SaveChanges();
-                await Login(customer);
+                string query = "SELECT * FROM Customer WHERE Email = @email";
+                var result = cm.DatabaseCustomer(customer, query);
+
+                if (result == null){
+                    _db.Add(customer);
+                    _db.SaveChanges();
+                    TempData["MensagemSucesso"] = "Cadastro realizado com sucesso!";
+                    await Login(customer);
+                }
+                else
+                {
+                    TempData["MensagemErro"] = "Email ja cadastrado.";
+                }
             }
             return RedirectToAction("Menu", "Product");
         }

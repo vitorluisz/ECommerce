@@ -21,14 +21,14 @@ namespace ECommerce.Models
 
             foreach (var productId in productIds)
             {
-                var basket = _db.Basket
+                var product = _db.Basket
                     .Where(b => b.ProductId == productId)
                     .Include(b => b.Product).ToList()
                     .FirstOrDefault();
 
-                if (basket != null)
+                if (product != null)
                 {
-                    baskets.Add(basket);
+                    baskets.Add(product);
                 }
             }
 
@@ -37,6 +37,7 @@ namespace ECommerce.Models
             foreach (var basket in baskets)
             {
                 Product product = _db.Produtos.SingleOrDefault(p => p.Id == basket.ProductId);
+                product.Quantity = _db.Basket.Where(b => b.ProductId == product.Id).Sum(b => b.Quantity);
                 products.Add(product);
             }
 

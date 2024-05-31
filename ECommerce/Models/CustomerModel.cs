@@ -17,12 +17,10 @@ namespace ECommerce.Models
             _configuration = configuration;
         }
         
-        public Customer DatabaseCustomer(Customer model)
+        public Customer DatabaseCustomer(Customer model, string query)
         {
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
             SqlConnection connection = new SqlConnection(connectionString);
-            // consulta SQL
-            string query = "SELECT TOP 1 * FROM Customer WHERE Email = @email AND Password = @password";
 
             // parâmetros da consulta
             SqlParameter emailParameter = new SqlParameter("@email", model.Email);

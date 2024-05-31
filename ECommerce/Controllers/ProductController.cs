@@ -14,21 +14,39 @@ namespace ECommerce.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Menu(IEnumerable<Product> filter)
         {
-            return View(_db.Produtos);
-        }
-        
-        public IActionResult Menu()
-        {
-            IEnumerable<Product> products = _db.Produtos;
-            return View(products);
+            if (filter.Any())
+            {
+                return View(filter);
+            }
+            else
+            {
+                IEnumerable<Product> products = _db.Produtos;
+                return View(products);
+            }
+
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult FilterCategory(string category, string search)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (category != "Todos" && string.IsNullOrEmpty(search))
+            {
+                IEnumerable<Product> productsCategory = _db.Produtos.Where(p => p.Category == category);
+
+                return View("Menu", productsCategory);
+            }else
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                IEnumerable<Product> productsSearch = _db.Produtos.Where(p => p.Name.Contains(search) || p.Description.Contains(search));
+
+                return View("Menu", productsSearch);
+            }
+            else
+            {
+                return View("Menu", _db.Produtos);
+            }
         }
     }
 }

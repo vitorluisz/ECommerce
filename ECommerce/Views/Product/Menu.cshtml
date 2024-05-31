@@ -44,20 +44,70 @@
         #preview-table td {
             padding: 5px;
         }
+
+    .quantity-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .quantity-button {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background-color: #f2f2f2;
+        cursor: pointer;
+    }
+
+    .quantity-input {
+        width: 50px;
+        height: 30px;
+        border: none;
+        text-align: center;
+        background-color: #f2f2f2;
+        margin: 0 5px;
+    }
+
+    #left-div {
+        width: 400px;
+        height: 100%;
+        border: 1px solid #ccc;
+        float: left;
+        padding: 0 10px; /* Adiciona espaço de 10 pixels à esquerda e à direita */
+        margin-left: 0; /* Remove o espaço inicial à esquerda */
+    }
+
+    #right-div {
+        margin-left: 410px; /* Adiciona espaço de 10 pixels à esquerda */
+        padding: 0 10px; /* Adiciona espaço de 10 pixels à esquerda e à direita */
+    }
 </style>
 
-<h1>Produtos</h1>
-
-<table>
-    <tbody>
-        @if (Model != null)
-        {
-            @for (int i = 0; i < Model.Count(); i += 3)
+<div id="left-div">
+    <h3>Filtro:</h3>
+    <form asp-controller="Product" asp-action="FilterCategory" method="get">
+        <select id="category-filter" name="category" onchange="this.form.submit()">
+            <option value="" selected="selected">Selecione:</option>
+            @foreach (var category in Enum.GetValues(typeof(Category)))
             {
-                <tr>
-                    @for (int j = i; j < Math.Min(i + 3, Model.Count()); j++)
-                    {
-                        var product = Model.ElementAt(j);
+                <option value="@category.ToString()">@category.ToString()</option>
+            }
+        </select>
+        <br />
+        <input type="text" name="search" placeholder="Pesquisar" />
+        <button type="submit">Pesquisar</button>
+    </form>
+</div>
+
+<div id="right-div">
+    <h1>Produtos</h1>
+
+    @if (Model != null)
+    {
+        <table id="product-table">
+            <tbody id="product-table-body">
+                @foreach (var product in Model)
+                {
+                    <tr>
                         <td>
                             <form asp-controller="Basket" asp-action="AddBasket" method="post">
                                 <input type="hidden" name="productId" value="@product.Id" />
@@ -76,55 +126,47 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input name="quantity" value="1" max="99" class="form-control" onchange="updateProductQuantity()" />
+                                            <div class="quantity-container" onclick="event.stopPropagation()">
+                                                <button type="button" class="quantity-button" onclick="decreaseQuantity(@product.Id)">-</button>
+                                                <input type="text" class="quantity-input" name="Quantity" id="quantity-@product.Id" data-product-id="@product.Id" value="@product.Quantity" readonly />
+                                                <button type="button" class="quantity-button" onclick="increaseQuantity(@product.Id)">+</button>
+                                            </div>
                                         </td>
                                     </tr>
                                 </table>
                             </form>
                         </td>
-                    }
-                </tr>
-            }
-        }
-    </tbody>
-</table>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Nenhum produto encontrado.</p>
+    }
+</div>
+
+
 
 <script>
     function submitForm(table) {
         table.parentNode.submit();
     }
 </script>
+
 <script>
-    function updateProductQuantity() {
-        const productQuantityInput = document.getElementById("product-quantity");
-        const quantityInput = document.getElementsByName("quantity")[0];
-        productQuantityInput.value = quantityInput.value;
-        const quantityHiddenInput = document.getElementsByName("hidden-quantity")[0];
-        quantityHiddenInput.value = quantityInput.value;
+    function decreaseQuantity(productId) {
+        var quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
+        var currentQuantity = parseInt(quantityInput.value);
+        if (currentQuantity > 1) {
+            quantityInput.value = currentQuantity - 1;
+        }
+    }
+
+    function increaseQuantity(productId) {
+        var quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
+        var currentQuantity = parseInt(quantityInput.value);
+        quantityInput.value = currentQuantity + 1;
     }
 </script>
-
-@* <table id="preview-table" style="display: none;">
-    <tbody>
-        <tr>
-            <td>Nome:</td>
-            <td id="preview-name"></td>
-        </tr>
-        <tr>
-            <td>Descrição:</td>
-            <td id="preview-description"></td>
-        </tr>
-        <tr>
-            <td>Preço:</td>
-            <td id="preview-price"></td>
-        </tr>
-        <tr>
-            <form asp-controller="Product" asp-action="AddCarrinho" method="post">
-                <div class="form-group">
-                    <input type="hidden" id="preview-id" name="preview-id" value="preview-id" />
-                    <input type="submit" value="Adicionar ao carrinho" class="btn btn-primary" />
-                </div>
-            </form>
-        </tr>
-    </tbody>
-</table>  *@

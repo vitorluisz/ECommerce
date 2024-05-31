@@ -27,8 +27,9 @@ namespace ECommerce.Controllers
             }
         }
 
-        public IActionResult AddBasket(int productId, int qnt)
+        public IActionResult AddBasket(int productId, Product productbasket)
         {
+            int qnt = productbasket.Quantity;
             using (var db = _db)
             {
                 // Obtenha o produto a partir do repositório usando o productId
@@ -46,7 +47,7 @@ namespace ECommerce.Controllers
                     return NotFound();
                 }
             }
-                
+
         }
 
         public IActionResult DelBasket()
