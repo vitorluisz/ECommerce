@@ -84,7 +84,7 @@
 
 <div id="left-div">
     <h3>Filtro:</h3>
-    <form asp-controller="Product" asp-action="FilterCategory" method="get">
+    <form asp-controller="Product" asp-action="Filter" method="get">
         <select id="category-filter" name="category" onchange="this.form.submit()">
             <option value="" selected="selected">Selecione:</option>
             @foreach (var category in Enum.GetValues(typeof(Category)))
@@ -103,39 +103,49 @@
 
     @if (Model != null)
     {
+        var groupedProducts = Model.GroupBy(p => p.Category);
+
         <table id="product-table">
             <tbody id="product-table-body">
-                @foreach (var product in Model)
+                @foreach (var group in groupedProducts)
                 {
                     <tr>
                         <td>
-                            <form asp-controller="Basket" asp-action="AddBasket" method="post">
-                                <input type="hidden" name="productId" value="@product.Id" />
-                                <table class="product-table" onclick="submitForm(this)">
-                                    <tr>
-                                        <td value="@product.Name">@product.Name</td>
-                                    </tr>
-                                    <tr>
-                                        <td value="@product.ImageUrl"><img src="@Url.Content(product.ImageUrl)" width="100" /></td>
-                                    </tr>
-                                    <tr>
-                                        <td value="@product.Description">@product.Description</td>
-                                    </tr>
-                                    <tr>
-                                        <td value="@product.Price">R$ @product.Price</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="quantity-container" onclick="event.stopPropagation()">
-                                                <button type="button" class="quantity-button" onclick="decreaseQuantity(@product.Id)">-</button>
-                                                <input type="text" class="quantity-input" name="Quantity" id="quantity-@product.Id" data-product-id="@product.Id" value="@product.Quantity" readonly />
-                                                <button type="button" class="quantity-button" onclick="increaseQuantity(@product.Id)">+</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </form>
+                            <h3>@group.Key</h3>
                         </td>
+                    </tr>
+                    <tr>
+                        @foreach (var product in group)
+                        {
+                            <td>
+                                <form asp-controller="Basket" asp-action="AddBasket" method="post">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <table class="product-table" onclick="submitForm(this)">
+                                        <tr>
+                                            <td value="@product.Name">@product.Name</td>
+                                        </tr>
+                                        <tr>
+                                            <td value="@product.ImageUrl"><img src="@Url.Content(product.ImageUrl)" width="100" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td value="@product.Description">@product.Description</td>
+                                        </tr>
+                                        <tr>
+                                            <td value="@product.Price">R$ @product.Price</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="quantity-container" onclick="event.stopPropagation()">
+                                                    <button type="button" class="quantity-button" onclick="decreaseQuantity(@product.Id)">-</button>
+                                                    <input type="text" class="quantity-input" name="Quantity" id="quantity-@product.Id" data-product-id="@product.Id" value="1" readonly />
+                                                    <button type="button" class="quantity-button" onclick="increaseQuantity(@product.Id)">+</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>

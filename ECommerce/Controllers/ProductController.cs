@@ -28,7 +28,7 @@ namespace ECommerce.Controllers
 
         }
 
-        public IActionResult FilterCategory(string category, string search)
+        public IActionResult Filter(string category, string search)
         {
             if (category != "Todos" && string.IsNullOrEmpty(search))
             {

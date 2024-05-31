@@ -29,17 +29,22 @@
 <form id="finalizar-compra-form" asp-controller="Finalize" asp-action="ending" method="post">
     <table>
         <tr>
+            <th>Imagem</th>
             <th>Produto</th>
             <th>Quantidade</th>
             <th>Preço</th>
             <th></th>
         </tr>
-        @if (Model != null && Model != null)
+        @{
+            decimal total = 0; // Declaração da variável total
+        }
+        @if (Model != null)
         {
             int index = 0;
             @foreach (var item in Model)
             {
                 <tr>
+                    <td value="@item.ImageUrl"><img src="@Url.Content(item.ImageUrl)" width="100" /></td>
                     <td>@item.Name</td>
                     <td>
                         <div class="quantity-container" onclick="event.stopPropagation()">
@@ -49,7 +54,7 @@
                         </div>
                         <input type="hidden" name="productQuantities[@index].ProductId" value="@item.Id" />
                     </td>
-                    <td>R$ @item.Price.ToString("N2")</td>
+                    <td data-price="@item.Price.ToString("N2")">R$ @item.Price.ToString("N2")</td>
                 </tr>
                 <tr>
                     <td>
@@ -59,6 +64,7 @@
                         </form>
                     </td>
                 </tr>
+                total += item.Price * item.Quantity; // Atualização da variável total
                 index++;
             }
         }
@@ -66,19 +72,23 @@
         <tr>
             <td colspan="2"></td>
             <td>Total:</td>
-        </tr>
-
-        <tr>
-            <td colspan="3">
-                <button type="submit">Finalizar Compra</button>
-            </td>
+            <td>R$ <span id="total-value">@total.ToString("N2")</span></td>
         </tr>
     </table>
 
     <tr>
         <td colspan="3">
-            <a asp-controller="Basket" asp-action="DelBasket">Excluir tudo</a>
-            <a asp-controller="Product" asp-action="Menu">Continuar Comprando</a>
+            <button class="btn">
+                <a asp-controller="Basket" asp-action="DelBasket">Excluir tudo</a>
+            </button>
+            <button class="btn">
+                <a asp-controller="Product" asp-action="Menu">Continuar Comprando</a>
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <button type="submit">Finalizar Compra</button>
         </td>
     </tr>
 </form>
@@ -103,5 +113,21 @@
     function updateFinalizarCompraForm(productId, index, quantity) {
         document.querySelector(`input[name="productQuantities[${index}].ProductId"]`).value = productId;
         document.querySelector(`input[name="productQuantities[${index}].Quantity"]`).value = quantity;
+        recalculateTotal();
+    }
+
+    function recalculateTotal() {
+        var total = 0;
+        var rows = document.querySelectorAll('table tr');
+        rows.forEach(function (row) {
+            var quantityInput = row.querySelector('.quantity-input');
+            var priceElement = row.querySelector('[data-price]');
+            if (quantityInput && priceElement) {
+                var quantity = parseInt(quantityInput.value);
+                var price = parseFloat(priceElement.getAttribute('data-price').replace('R$', '').replace(',', '.'));
+                total += quantity * price;
+            }
+        });
+        document.getElementById('total-value').innerText = `${total.toFixed(2).replace('.', ',')}`;
     }
 </script>
