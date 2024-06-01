@@ -1,5 +1,25 @@
 ﻿@model Product
 
+@if (TempData["ProductSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["ProductSuccess"]
+    </div>
+    TempData.Remove("ProductSuccess");
+}
+else
+{
+    @if (TempData["ProductErro"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ProductErro"]
+        </div>
+        TempData.Remove("ProductErro");
+    }
+    TempData.Remove("ProductSuccess");
+    TempData.Remove("ProductErro");
+}
+
 <h1>Adicionar Produto</h1>
 
 <form asp-controller="ManagerProduct" asp-action="ManagerAddProduct" method="post">

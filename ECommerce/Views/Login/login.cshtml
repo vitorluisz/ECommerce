@@ -1,5 +1,25 @@
 ﻿@model Customer
 
+@if (TempData["LoginSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["LoginSuccess"]
+    </div>
+    TempData.Remove("LoginSuccess");
+}
+else
+{
+    @if (TempData["LoginErro"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["LoginErro"]
+        </div>
+        TempData.Remove("LoginErro");
+    }
+    TempData.Remove("LoginSuccess");
+    TempData.Remove("LoginErro");
+}
+
 <h1>Entre ou cadastre-se</h1>
 
 <form asp-controller="Login" asp-action="Login" method="post">
@@ -10,7 +30,7 @@
     </div>
     <div class="form-group">
         <label asp-for="Password" class="control-label">Senha:</label>
-        <input asp-for="Password" class="form-control" />
+        <input asp-for="Password" class="form-control" type="password"/>
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
     <div class="form-group">

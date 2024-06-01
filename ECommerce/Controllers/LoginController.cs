@@ -42,6 +42,15 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
+                var isValidPassword = cm.IsPasswordValid(model);
+                var isValidEmail = cm.IsEmailValid(model);
+
+                if (isValidEmail != string.Empty || isValidPassword != string.Empty)
+                {
+                    TempData["LoginErro"] = "Login ou senha incorretos.";
+                    return View();
+                }
+
                 string query = "SELECT TOP 1 * FROM Customer WHERE Email = @email AND Password = @password";
                 var customer = cm.DatabaseCustomer(model, query);
 
@@ -55,7 +64,7 @@ namespace ECommerce.Controllers
                 }
                 else
                 {
-                    TempData["MensagemErro"] = "Login ou senha incorretos.";
+                    TempData["LoginErro"] = "Login ou senha incorretos.";
                     return View();
                 }
             }
@@ -94,15 +103,32 @@ namespace ECommerce.Controllers
                 string query = "SELECT * FROM Customer WHERE Email = @email";
                 var result = cm.DatabaseCustomer(customer, query);
 
-                if (result == null){
-                    _db.Add(customer);
-                    _db.SaveChanges();
-                    TempData["MensagemSucesso"] = "Cadastro realizado com sucesso!";
-                    await Login(customer);
+                var isValidPassword = cm.IsPasswordValid(customer);
+                var isValidEmail = cm.IsEmailValid(customer);
+                var isValidName = cm.IsNameValid(customer);
+
+                if (result != null)
+                {
+                    TempData["RegisterErro"] = "Email ja cadastrado.";
+                }
+                else if(isValidPassword != string.Empty)
+                {
+                    TempData["RegisterErro"] = isValidPassword;
+                }
+                else if (isValidEmail != string.Empty)
+                {
+                    TempData["RegisterErro"] = isValidEmail;
+                }
+                else if (isValidName != string.Empty)
+                {
+                    TempData["RegisterErro"] = isValidName;
                 }
                 else
                 {
-                    TempData["MensagemErro"] = "Email ja cadastrado.";
+                    _db.Add(customer);
+                    _db.SaveChanges();
+                    TempData["MenuSuccess"] = "Cadastro realizado com sucesso!";
+                    await Login(customer);
                 }
             }
             return RedirectToAction("Menu", "Product");

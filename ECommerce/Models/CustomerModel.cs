@@ -54,5 +54,34 @@ namespace ECommerce.Models
 
             return customer;
         }
+
+        public string IsPasswordValid(Customer customers)
+        {
+            bool isvalid = false;
+            if (customers.Password != null)
+            {
+                isvalid = customers.Password.Length >= 6 && customers.Password.Any(c => char.IsNumber(c)) && customers.Password.Any(c => char.IsUpper(c)) && customers.Password.Any(c => char.IsLower(c));
+            }
+            string error = isvalid ? string.Empty : "Sua senha precisa conter no mínimo 6 caracteres, 1 letra maiúscula, 1 letra minúscula e 1 número";
+            return error;
+        }
+
+        public string IsNameValid(Customer customers)
+        {
+            bool isvalid = !string.IsNullOrWhiteSpace(customers.FirstName) && !string.IsNullOrWhiteSpace(customers.LastName);
+            string error = isvalid ? string.Empty : "Nome muito curto.";
+            return error;
+        }
+
+        public string IsEmailValid(Customer customers)
+        {
+            bool isvalid = false;
+            if (customers.Email != null)
+            {
+                isvalid = customers.Email.Length >= 6 && customers.Email.Contains("@");
+            }
+            string error = isvalid ? string.Empty : "Email não reconhecido.";
+            return error;
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace ECommerce.Controllers
     
     public class ManagerProductController : Controller
     {
+        readonly private ProductModel pm;
         readonly private ApplicationDbContext _db;
 
         public ManagerProductController(ApplicationDbContext db)
@@ -27,10 +28,43 @@ namespace ECommerce.Controllers
             product.Quantity = 1;
             if (ModelState.IsValid)
             {
-                _db.Add(product);
-                _db.SaveChanges();
-                TempData["MensagemSucesso"] = "Produto adicionado com sucesso!";
-                return RedirectToAction("Menu", "Product");
+                var IsNameValid = pm.IsNameValid(product);
+                var IsDescriptionValid = pm.IsDescriptionValid(product);
+                var IsPriceValid = pm.IsPriceValid(product);
+                var IsCategoryValid = pm.IsCategoryValid(product);
+                var IsImageValid = pm.IsImageValid(product);
+
+                if (IsNameValid != string.Empty)
+                {
+                    TempData["ProductErro"] = IsNameValid;
+                }
+                else if (IsDescriptionValid != string.Empty)
+                {
+                    TempData["ProductErro"] = IsDescriptionValid;
+                }
+                else if (IsPriceValid != string.Empty)
+                {
+                    TempData["ProductErro"] = IsPriceValid;
+                }
+                else if (IsCategoryValid != string.Empty)
+                {
+                    TempData["ProductErro"] = IsCategoryValid;
+                }
+                else if (IsImageValid != string.Empty)
+                {
+                    TempData["ProductErro"] = IsImageValid;
+                }
+                else
+                {
+                    _db.Add(product);
+                    _db.SaveChanges();
+                    TempData["MenuSuccess"] = "Produto adicionado com sucesso!";
+                    return RedirectToAction("Menu", "Product");
+                }
+            }
+            else
+            {
+                TempData["MenuError"] = "Erro ao adicionar produto.";
             }
 
             return View(product);
@@ -41,13 +75,26 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Remove(product);
-                _db.SaveChanges();
-                TempData["MensagemSucesso"] = "Produto deletado com sucesso!";
-                return RedirectToAction("Menu", "Product");
+                var productid = _db.Produtos.Where(p => p.Id == product.Id).FirstOrDefault();
+                if (productid != null)
+                {
+                    _db.Remove(product);
+                    _db.SaveChanges();
+                    TempData["MenuSuccess"] = "Produto deletado com sucesso!";
+                    return RedirectToAction("Menu", "Product");
+                }
+                else
+                {
+                    TempData["ProductErro"] = "Produto não encontrado.";
+                    return RedirectToAction("AddProduct", "ManagerProduct");
+                }
+                
             }
-
-            return View(product);
+            else
+            {
+                TempData["ProductErro"] = "Erro ao deletar produto.";
+                return RedirectToAction("AddProduct", "ManagerProduct");
+            }
         }
     }
 }
