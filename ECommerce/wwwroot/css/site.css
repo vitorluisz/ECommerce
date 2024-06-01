@@ -16,3 +16,92 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*Menu*/
+
+.product-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-table {
+    width: 250px; 
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-right: 20px; 
+    margin-bottom: 20px; 
+    padding: 10px; 
+    text-align: center;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    cursor: pointer;
+}
+
+#preview-table {
+    display: none;
+    position: absolute;
+    top: 100px;
+    right: 100px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0;
+}
+
+    #preview-table tr {
+        border-bottom: 1px solid #ccc;
+    }
+
+    #preview-table td {
+        padding: 5px;
+    }
+
+#left-div {
+    width: 400px;
+    height: 100%;
+    border: 1px solid #ccc;
+    float: left;
+    padding: 0 10px; 
+    margin-left: 0; 
+}
+
+#right-div {
+    margin-left: 410px; 
+    padding: 0 10px; 
+}
+
+/*basket e Menu*/
+
+.quantity-container {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.quantity-input {
+    width: 50px;
+    height: 30px;
+    border: none;
+    text-align: center;
+    background-color: #f2f2f2;
+    margin: 0 5px;
+}
+
+/*ending*/
+
+.text-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

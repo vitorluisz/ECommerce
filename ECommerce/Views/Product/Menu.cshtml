@@ -1,87 +1,5 @@
 ﻿@model IEnumerable<Product>
 
-<style>
-    /* Remover sublinhado e cor azul do link */
-    .product-link {
-        text-decoration: none;
-        color: inherit;
-    }
-
-    /* Adicionar bordas arredondadas e espaçamento */
-    .product-table {
-        width: 250px; /* Tamanho fixo */
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        margin-right: 20px; /* Espaçamento para os lados */
-        margin-bottom: 20px; /* Espaçamento entre as tabelas */
-        padding: 10px; /* Adicionar padding para espaçamento interno */
-        text-align: center;
-        margin: 0 auto;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        cursor: pointer;
-    }
-
-    #preview-table {
-        display: none;
-        position: absolute;
-        top: 100px;
-        right: 100px;
-        width: 300px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        padding: 10px;
-        margin: 0;
-    }
-
-        /* Estilos para a tabela secundária - linhas */
-        #preview-table tr {
-            border-bottom: 1px solid #ccc;
-        }
-
-        /* Estilos para a tabela secundária - células */
-        #preview-table td {
-            padding: 5px;
-        }
-
-    .quantity-container {
-        display: flex;
-        align-items: center;
-    }
-
-    .quantity-button {
-        width: 30px;
-        height: 30px;
-        border: none;
-        background-color: #f2f2f2;
-        cursor: pointer;
-    }
-
-    .quantity-input {
-        width: 50px;
-        height: 30px;
-        border: none;
-        text-align: center;
-        background-color: #f2f2f2;
-        margin: 0 5px;
-    }
-
-    #left-div {
-        width: 400px;
-        height: 100%;
-        border: 1px solid #ccc;
-        float: left;
-        padding: 0 10px; /* Adiciona espaço de 10 pixels à esquerda e à direita */
-        margin-left: 0; /* Remove o espaço inicial à esquerda */
-    }
-
-    #right-div {
-        margin-left: 410px; /* Adiciona espaço de 10 pixels à esquerda */
-        padding: 0 10px; /* Adiciona espaço de 10 pixels à esquerda e à direita */
-    }
-</style>
-
 <div id="left-div">
     <h3>Filtro:</h3>
     <form asp-controller="Product" asp-action="Filter" method="get">
@@ -136,9 +54,9 @@
                                         <tr>
                                             <td>
                                                 <div class="quantity-container" onclick="event.stopPropagation()">
-                                                    <button type="button" class="quantity-button" onclick="decreaseQuantity(@product.Id)">-</button>
+                                                    <button type="button" class="quantity-button" onclick="HomedecreaseQuantity(@product.Id)">-</button>
                                                     <input type="text" class="quantity-input" name="Quantity" id="quantity-@product.Id" data-product-id="@product.Id" value="1" readonly />
-                                                    <button type="button" class="quantity-button" onclick="increaseQuantity(@product.Id)">+</button>
+                                                    <button type="button" class="quantity-button" onclick="HomeincreaseQuantity(@product.Id)">+</button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -156,27 +74,3 @@
         <p>Nenhum produto encontrado.</p>
     }
 </div>
-
-
-
-<script>
-    function submitForm(table) {
-        table.parentNode.submit();
-    }
-</script>
-
-<script>
-    function decreaseQuantity(productId) {
-        var quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
-        var currentQuantity = parseInt(quantityInput.value);
-        if (currentQuantity > 1) {
-            quantityInput.value = currentQuantity - 1;
-        }
-    }
-
-    function increaseQuantity(productId) {
-        var quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
-        var currentQuantity = parseInt(quantityInput.value);
-        quantityInput.value = currentQuantity + 1;
-    }
-</script>

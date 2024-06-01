@@ -1,29 +1,5 @@
 ﻿@model IEnumerable<Product>
 
-<style>
-    .quantity-container {
-        display: flex;
-        align-items: center;
-    }
-
-    .quantity-button {
-        width: 30px;
-        height: 30px;
-        border: none;
-        background-color: #f2f2f2;
-        cursor: pointer;
-    }
-
-    .quantity-input {
-        width: 50px;
-        height: 30px;
-        border: none;
-        text-align: center;
-        background-color: #f2f2f2;
-        margin: 0 5px;
-    }
-</style>
-
 <h1>Carrinho de Compras</h1>
 
 <form id="finalizar-compra-form" asp-controller="Finalize" asp-action="ending" method="post">
@@ -48,9 +24,9 @@
                     <td>@item.Name</td>
                     <td>
                         <div class="quantity-container" onclick="event.stopPropagation()">
-                            <button type="button" class="quantity-button" onclick="decreaseQuantity(@item.Id, @index)">-</button>
+                            <button type="button" class="quantity-button" onclick="BasketdecreaseQuantity(@item.Id, @index)">-</button>
                             <input type="text" class="quantity-input" name="productQuantities[@index].Quantity" data-product-id="@item.Id" value="@item.Quantity" readonly />
-                            <button type="button" class="quantity-button" onclick="increaseQuantity(@item.Id, @index)">+</button>
+                            <button type="button" class="quantity-button" onclick="BasketincreaseQuantity(@item.Id, @index)">+</button>
                         </div>
                         <input type="hidden" name="productQuantities[@index].ProductId" value="@item.Id" />
                     </td>
@@ -92,42 +68,3 @@
         </td>
     </tr>
 </form>
-
-<script>
-    function decreaseQuantity(productId, index) {
-        var quantityInput = document.querySelector(`input[name="productQuantities[${index}].Quantity"]`);
-        var currentQuantity = parseInt(quantityInput.value);
-        if (currentQuantity > 1) {
-            quantityInput.value = currentQuantity - 1;
-            updateFinalizarCompraForm(productId, index, currentQuantity - 1);
-        }
-    }
-
-    function increaseQuantity(productId, index) {
-        var quantityInput = document.querySelector(`input[name="productQuantities[${index}].Quantity"]`);
-        var currentQuantity = parseInt(quantityInput.value);
-        quantityInput.value = currentQuantity + 1;
-        updateFinalizarCompraForm(productId, index, currentQuantity + 1);
-    }
-
-    function updateFinalizarCompraForm(productId, index, quantity) {
-        document.querySelector(`input[name="productQuantities[${index}].ProductId"]`).value = productId;
-        document.querySelector(`input[name="productQuantities[${index}].Quantity"]`).value = quantity;
-        recalculateTotal();
-    }
-
-    function recalculateTotal() {
-        var total = 0;
-        var rows = document.querySelectorAll('table tr');
-        rows.forEach(function (row) {
-            var quantityInput = row.querySelector('.quantity-input');
-            var priceElement = row.querySelector('[data-price]');
-            if (quantityInput && priceElement) {
-                var quantity = parseInt(quantityInput.value);
-                var price = parseFloat(priceElement.getAttribute('data-price').replace('R$', '').replace(',', '.'));
-                total += quantity * price;
-            }
-        });
-        document.getElementById('total-value').innerText = `${total.toFixed(2).replace('.', ',')}`;
-    }
-</script>

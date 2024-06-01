@@ -47,8 +47,9 @@ namespace ECommerce.Controllers
 
                 if (customer != null)
                 {
-                    BasketController bc = new BasketController(_db);
-                    bc.DelBasket();
+                    // removido pois o usuario pode ter finalizado a compra deslogado
+                    //BasketController bc = new BasketController(_db);
+                    //bc.DelBasket();
                     await SignInAsync(customer);
                     return RedirectToAction("Menu", "Product");
                 }

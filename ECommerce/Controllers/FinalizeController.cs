@@ -26,6 +26,10 @@ namespace ECommerce.Controllers
 
         public IActionResult ending(List<ProductQuantity> productQuantities)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Login");
+            }
             List<Product> products = new List<Product>();
 
             foreach (var prod in productQuantities)

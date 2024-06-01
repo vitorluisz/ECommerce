@@ -1,14 +1,5 @@
 ﻿@model IEnumerable<Product>
 
-<style>
-    .text-center {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-</style>
-
 <div class="text-center">
     <h1>Obrigado pela compra!</h1>
     <h2>Verifique seu email.</h2>
@@ -19,8 +10,8 @@
             @foreach (var product in Model)
             {
                 <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Quantity unidades</td>
+                    <td>@product.Name   </td>
+                    <td>    -> @product.Quantity unidades</td>
                 </tr>
             }
         </tbody>
