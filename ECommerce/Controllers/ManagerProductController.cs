@@ -14,6 +14,7 @@ namespace ECommerce.Controllers
         public ManagerProductController(ApplicationDbContext db)
         {
             _db = db;
+            pm = new ProductModel(db);
         }
 
         [Authorize(Roles = "Admin")]

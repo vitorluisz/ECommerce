@@ -2,23 +2,24 @@
 
 <h1>Carrinho de Compras</h1>
 
-<form id="finalizar-compra-form" asp-controller="Finalize" asp-action="ending" method="post">
-    <table>
-        <tr>
-            <th>Imagem</th>
-            <th>Produto</th>
-            <th>Quantidade</th>
-            <th>Preço</th>
-            <th></th>
-        </tr>
-        @{
-            decimal total = 0; // Declaração da variável total
-        }
+<table>
+    <tr>
+        <th>Imagem</th>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Preço</th>
+        <th></th>
+    </tr>
+    @{
+        decimal total = 0;
+    }
+    <form id="finalizar-compra-form" asp-controller="Finalize" asp-action="ending" method="post">
         @if (Model != null)
         {
             int index = 0;
             @foreach (var item in Model)
             {
+            
                 <tr>
                     <td value="@item.ImageUrl"><img src="@Url.Content(item.ImageUrl)" width="100" /></td>
                     <td>@item.Name</td>
@@ -32,39 +33,38 @@
                     </td>
                     <td data-price="@item.Price.ToString("N2")">R$ @item.Price.ToString("N2")</td>
                 </tr>
+            
                 <tr>
-                    <td>
-                        <form asp-controller="Basket" asp-action="DelProductBasket" method="post">
-                            <input type="hidden" name="productId" value="@item.Id" />
-                            <button type="submit">Excluir produto</button>
-                        </form>
-                    </td>
+                    <td> <button onclick="delProductBasket(this)" data-product-id="@item.Id" form="del-product-form">Excluir produto</button> </td>
                 </tr>
-                total += item.Price * item.Quantity; // Atualização da variável total
+                total += item.Price * item.Quantity;
                 index++;
             }
         }
-
-        <tr>
-            <td colspan="2"></td>
-            <td>Total:</td>
-            <td>R$ <span id="total-value">@total.ToString("N2")</span></td>
-        </tr>
-    </table>
+    </form>
 
     <tr>
-        <td colspan="3">
-            <button class="btn">
-                <a asp-controller="Basket" asp-action="DelBasket">Excluir tudo</a>
-            </button>
-            <button class="btn">
-                <a asp-controller="Product" asp-action="Menu">Continuar Comprando</a>
-            </button>
-        </td>
+        <td colspan="2"></td>
+        <td>Total:</td>
+        <td>R$ <span id="total-value">@total.ToString("N2")</span></td>
     </tr>
-    <tr>
-        <td colspan="3">
-            <button type="submit">Finalizar Compra</button>
-        </td>
-    </tr>
+</table>
+
+<form id="del-product-form" asp-controller="Basket" asp-action="DelProductBasket" method="post">
 </form>
+
+<tr>
+    <td colspan="3">
+        <button class="btn">
+            <a asp-controller="Basket" asp-action="DelBasket">Excluir tudo</a>
+        </button>
+        <button class="btn">
+            <a asp-controller="Product" asp-action="Menu">Continuar Comprando</a>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td colspan="3">
+        <button onclick="finalize()">Finalizar Compra</button>
+    </td>
+</tr>

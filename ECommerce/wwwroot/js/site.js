@@ -26,6 +26,7 @@ function BasketdecreaseQuantity(productId, index) {
     if (currentQuantity > 1) {
         quantityInput.value = currentQuantity - 1;
         updateFinalizarCompraForm(productId, index, currentQuantity - 1);
+        updateQuantityOnServer(productId, currentQuantity - 1);
     }
 }
 
@@ -34,6 +35,7 @@ function BasketincreaseQuantity(productId, index) {
     var currentQuantity = parseInt(quantityInput.value);
     quantityInput.value = currentQuantity + 1;
     updateFinalizarCompraForm(productId, index, currentQuantity + 1);
+    updateQuantityOnServer(productId, currentQuantity + 1);
 }
 
 function updateFinalizarCompraForm(productId, index, quantity) {
@@ -50,9 +52,43 @@ function recalculateTotal() {
         var priceElement = row.querySelector('[data-price]');
         if (quantityInput && priceElement) {
             var quantity = parseInt(quantityInput.value);
-            var price = parseFloat(priceElement.getAttribute('data-price').replace('R$', '').replace(',', '.'));
+            var price = parseFloat(priceElement.getAttribute('data-price').replace('R$', '').replace('.', '').replace(',', '.'));
             total += quantity * price;
         }
     });
-    document.getElementById('total-value').innerText = `${total.toFixed(2).replace('.', ',')}`;
+    document.getElementById('total-value').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+}
+
+function updateQuantityOnServer(productId, quantity) {
+    $.ajax({
+        url: '/Basket/UpdateQuantity',
+        type: 'POST',
+        data: {
+            productId: productId,
+            quantity: quantity
+        },
+        success: function (response) {
+            // Você pode adicionar lógica adicional aqui se necessário
+        },
+        error: function (error) {
+            console.error('Erro ao atualizar quantidade no servidor:', error);
+        }
+    });
+}
+
+function finalize() {
+    var form = document.getElementById("finalizar-compra-form"); // selecione o formulário correto
+    form.submit(); // submeta o formulário
+}
+
+function delProductBasket(button) {
+    event.preventDefault();
+    var productId = button.getAttribute('data-product-id');
+    var form = document.getElementById('del-product-form');
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'productId';
+    input.value = productId;
+    form.appendChild(input);
+    form.submit();
 }

@@ -11,11 +11,6 @@ namespace ECommerce.Controllers
         readonly private FinalizeModel fm;
         readonly private ApplicationDbContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public class ProductQuantity
-        {
-            public int ProductId { get; set; }
-            public int Quantity { get; set; }
-        }
 
         public FinalizeController(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
         {
@@ -35,7 +30,7 @@ namespace ECommerce.Controllers
             foreach (var prod in productQuantities)
             {
                 Product product = _db.Produtos.SingleOrDefault(p => p.Id == prod.ProductId);
-                product.Quantity = _db.Basket.Where(b => b.ProductId == product.Id).Sum(b => b.Quantity);
+                product.Quantity = prod.Quantity;
                 products.Add(product);
             }
 

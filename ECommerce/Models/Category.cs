@@ -5,9 +5,10 @@ namespace ECommerce.Models
     public enum Category
     {
         Todos,
-        Comidas,
+        Eletrônicos,
         Roupas,
-        Carros,
-        Outros
+        Móveis,
+        Brinquedos,
+        Carros
     }
 }
