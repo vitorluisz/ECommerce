@@ -31,6 +31,9 @@ namespace ECommerce
                     options.LoginPath = new PathString("/Login");
                 });
 
+            // Configure email settings
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

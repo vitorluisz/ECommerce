@@ -1,6 +1,7 @@
 ﻿using ECommerce.Data;
 using ECommerce.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using static ECommerce.Controllers.BasketController;
 
@@ -12,11 +13,11 @@ namespace ECommerce.Controllers
         readonly private ApplicationDbContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FinalizeController(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
+        public FinalizeController(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor, IOptions<EmailSettings> emailSettings)
         {
             _db = db;
             _httpContextAccessor = httpContextAccessor;
-            fm = new FinalizeModel(db, httpContextAccessor);
+            fm = new FinalizeModel(db, httpContextAccessor, emailSettings);
         }
 
         public IActionResult ending(List<ProductQuantity> productQuantities)
