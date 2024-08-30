@@ -17,29 +17,40 @@ ECommerce é uma Aplicação Web desenvolvida em ASP.NET MVC, um site de compras
 # Funcionalidades
 
 ## Carrinho de Compras
-Adicione, remova e atualize a quantidade de itens no carrinho.
+
+Adicione, remova e atualize a quantidade de itens no carrinho em tempo real.
 ![Layout 1](https://raw.githubusercontent.com/vitorluisz/ECommerce/master/ECommerce/wwwroot/img/Screenshot_134.png)
 
 ## Filtro
+
 Navegue pelos produtos utilizando o filtro por categorias.
 ![Layout 1](https://raw.githubusercontent.com/vitorluisz/ECommerce/master/ECommerce/wwwroot/img/Screenshot_136.png)
+
 Ou pelo filtro de palavras.
 ![Layout 1](https://raw.githubusercontent.com/vitorluisz/ECommerce/master/ECommerce/wwwroot/img/Screenshot_137.png)
 
 ## Painel de Administração
-Gerencie produtos, categorias e pedidos (somente para administradores).
+
+Gerencie produtos, categorias, e delete produtos já existentes (somente para administradores).
 ![Layout 1](https://raw.githubusercontent.com/vitorluisz/ECommerce/master/ECommerce/wwwroot/img/Screenshot_138.png)
 
 ## Finalização de Compra
+
 Conclua a compra e receba um email de confirmação.
+<br/>
 ![Layout 1](https://raw.githubusercontent.com/vitorluisz/ECommerce/master/ECommerce/wwwroot/img/Screenshot_140.png)
-Email exemplo de confirmação.
+<br/>
+Email de exemplo de confirmação.
+<br/>
 ![Layout 1](https://raw.githubusercontent.com/vitorluisz/ECommerce/master/ECommerce/wwwroot/img/Screenshot_135.png)
 
 ## Autenticação de Usuário
-Registre-se ou faça login.
+Registre-se ou faça login, pode-se criar uma conta de dois tipos diferentes, usuário comum e administrador.
+<br/>
 ![Layout 1](https://raw.githubusercontent.com/vitorluisz/ECommerce/master/ECommerce/wwwroot/img/Screenshot_139.png)
-Quando estiver logado, será visível.
+<br/>
+Quando estiver logado, será visível seu nome.
+<br/>
 ![Layout 1](https://raw.githubusercontent.com/vitorluisz/ECommerce/master/ECommerce/wwwroot/img/Screenshot_141.png)
 
 # Projeto
