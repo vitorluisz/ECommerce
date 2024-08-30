@@ -32,12 +32,15 @@ namespace ECommerce.Models
         {
             try
             {
+                decimal valorTotal = 0;
                 var productDetails = new StringBuilder();
                 productDetails.AppendLine("Seus produtos:");
                 foreach (var product in products)
                 {
-                    productDetails.AppendLine($"- {product.Name}: Quantidade: {product.Quantity} (Preço: {product.Price})");
+                    productDetails.AppendLine($"- {product.Name}: Quantidade: {product.Quantity} (Preço: {product.Price * product.Quantity})");
+                    valorTotal = valorTotal + product.Price * product.Quantity;
                 }
+                productDetails.AppendLine($"Valor total: {valorTotal}");
 
                 var options = new RestClientOptions("https://api.mailgun.net/v3")
                 {

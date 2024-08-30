@@ -20,7 +20,7 @@ else
     TempData.Remove("LoginErro");
 }
 
-<h1>Entre ou cadastre-se</h1>
+<h1>Entre</h1>
 
 <form asp-controller="Login" asp-action="Login" method="post">
     <div class="form-group">
@@ -37,3 +37,5 @@ else
         <input type="submit" value="Entrar" class="btn btn-primary" />
     </div>
 </form>
+
+Não tem uma conta? <a asp-controller="Product" asp-action="Menu">Cadastre-se</a>

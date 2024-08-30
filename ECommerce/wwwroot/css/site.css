@@ -1,3 +1,5 @@
+/*site*/
+
 html {
   font-size: 14px;
 }
@@ -17,8 +19,10 @@ body {
   margin-bottom: 60px;
 }
 
+.navbar {
+    background-color: aqua;
+}
 /*Menu*/
-
 .product-link {
     text-decoration: none;
     color: inherit;
@@ -104,4 +108,13 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+/*elementos*/
+
+.btn-primary {
+    color: #fff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    margin-top: 10px;
 }
